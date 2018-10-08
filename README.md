@@ -33,34 +33,34 @@ DOM представляет собой объектно-ориентирова�
 Мы получаем доступ к DOM через один объект: `document`. Что мы можем сделать с этим объектом? Это корень дерева DOM, и мы можем задать ему элемент с определенным идентификатором, элементами с определенным классом и т. д. Откройте консоль в инструментах dev и вытащите некоторую информацию из DOM; действуйте согласно коду на Рисунке 2.
 
 ```js
-// Get the document object. (Установите объект документа)
+// Get the document object. (Зайдайте объект документа)
 document;
 
-// Get the title of the page. (Установите заголовок страницы)
+// Get the title of the page. (Зайдайте заголовок страницы)
 document.title;
 
-// Get the element with the id "fish-list". (Установите элемент с ID "fish-list")
+// Get the element with the id "fish-list". (Зайдайте элемент с ID "fish-list")
 document.getElementById("fish-list");
 
-// Get all the <span> elements. (Установите все элементы <span>)
+// Get all the <span> elements. (Зайдайте все элементы <span>)
 document.getElementsByTagName("span");
 
-// Get all the elements with the class "fish-list-card". (Установите все элементы класса "fish-list-card".)
+// Get all the elements with the class "fish-list-card". (Зайдайте все элементы класса "fish-list-card".)
 document.getElementsByClassName("fish-list-card");
 
-// Get all the <h1> elements that descend from the element with the id "main". (Установите все <h1> элементы, которые идут ниже эелемента с ID "main)
+// Get all the <h1> elements that descend from the element with the id "main". (Зайдайте все <h1> элементы, которые идут ниже эелемента с ID "main)
 let main = document.getElementById("main");
 main.getElementsByTagName("h1");
 
-// Get the children of the first element with the class "fish-list-card". (Установите дочерний элемент первого элемента с классом "fish-list-card".)
+// Get the children of the first element with the class "fish-list-card". (Зайдайте дочерний элемент первого элемента с классом "fish-list-card".)
 let firstCard = document.getElementsByClassName("fish-list-card")[0];
 firstCard.children;
 
-// Get the text inside the element with the id "wordmark". (Установите текст внутри элемента с ID “wordmark")
+// Get the text inside the element with the id "wordmark". (Зайдайте текст внутри элемента с ID “wordmark")
 let wordmark = document.getElementById("wordmark");
 wordmark.innerText;
 
-// Get the value of the id attribute of the first <span> tag. (Установите значения атрибута ID первого <span> тега)
+// Get the value of the id attribute of the first <span> tag. (Зайдайте значения атрибута ID первого <span> тега)
 let firstSpan = document.getElementsByTagName("span")[0];
 firstSpan.attributes["id"].value;
 ```
