@@ -1,119 +1,118 @@
-# The DOM Challenge
+# Вызов (челлендж) DOM
 
-## Summary
-Every time we visit a webpage, our browser first sends a request to the server asking for content, and the server sends back a response with the HTML for the page.
+## Резюме
+Каждый раз, когда мы посещаем веб-страницу, наш браузер сначала отправляет запрос на сервер, запрашивая контент, и сервер отправляет ответ с HTML для этой страницы.
 
-The HTML in the server's response is just text.  But, when the browser receives the response, it parses that text into Javascript objects. Each object represents one HTML element, and they're linked together in a tree structure representing the HTML text.
+HTML в ответе сервера - это просто текст. Но когда браузер получает ответ, он анализирует этот текст на наличие объектов Javascript. Каждый объект представляет собой один элемент HTML, и они связаны друг с другом в древовидной структуре, представляющей текст HTML.
 
-This collection of objects is known as the *document object model*, or DOM for short.  
+Этот набор объектов известен как * document object model , *или кратко - DOM.*
 
-If we flip the words around, we could say that the DOM models a document. Typically you start interacting with the DOM by using a variable called `document` which represents the "root node" — the node that is the parent of all the other HTML nodes below it. 
+Если мы перевернем слова, то сможем сказать, что DOM моделирует документ. Обычно Вы начинаете взаимодействовать с DOM, используя переменную под названием `document`, которая представляет «корневой узел» - узел, который является родительским элементом всех других узлов HTML под ним.
 
-Recall the Phase 1 challenges where we scraped HTML using Nokogiri.  Nokogiri parsed a string of HTML and returned Ruby objects that represented that HTML.  We had one object to represent the whole document, and you used it to call things like `.css` to search through all the Nokogiri `Node` objects.  There were Nokogiri `Node` objects representing each heading, paragraph, etc.  And we could interact with the objects to get the nodes with a certain class, get their child nodes, etc.
+DOM действует похожим образом. Мы можем получить доступ к узлам с определенными классами, получить их дочерние узлы и многое другое –и делаем это точно так же. В браузере мы взаимодействуем с DOM через JavaScript. Давайте посмотрим, как это работает.
 
-The DOM is very similar. We can access nodes with specific classes, get their child nodes, and more — just like we did with the Nokogiri objects.  In the browser, we interact with the DOM via JavaScript.  Let's see how this works.
+## Выпуски
 
-## Releases
-### Release 0:  HTML, the DOM, and Dev Tools
-To begin exploring the DOM, we'll take a look at an HTML document and how it's represented by the browser.  In this repository is a file `index.html`.  It's a pretty straightforward HMTL document.  We start with the opening `<html>` tag.  Nested within the `<html>` tag are the `<head>` and `<body>` tags.  Then, within the `<body>` tag are nested more tags, `<header>` and `<main>`.  Read through the file to understand the structure of the HTML document.  What other elements are there?  How are they organized?
+### Выпуск 0: HTML, DOM и инструменты Dev
 
-When we understand the structure of the HTML, open `index.html` in a browser.  When we open the file, the browser will receive the text of the document and parse it into the DOM.  Each HTML element is parsed into a DOM object, and the DOM objects are organized in a tree structure (see [illustration][html5rocks node tree]).
+Чтобы начать изучение DOM, мы рассмотрим документ HTML и то, как он представляется в браузере. В этом репозитории находится файл `index.html`. Можно заметить, что это довольно простой документ HMTL. Начнем с тега `<html>`. Вложенными в тег `<html>` являются теги `<head>` и `<body>`. Затем в теге `<body>` вложены большее количество тегов - `<header>` и `<main>`. Прочитайте файл, чтобы понять структуру HTML-документа. Какие еще элементы существуют? Как они организованы?
 
-We can explore the DOM tree using our browser's developer tools ([chrome dev tools][]).  If we're using  Chrome, the DOM is represented to us on the "Elements" tab.  The DOM's tree structure is displayed like an outline which we can explore visually by expanding and collapsing individual branches.  As our cursor moves over a node in the outline, the page view highlights that node.  This is demonstrated in Figure 1.
+После того, как поймете структуру HTML, откройте `index.html` в браузере. Когда мы открываем файл, браузер получает текст документа и анализирует его в DOM. Каждый элемент HTML анализируется в объект DOM, а объекты DOM организуются в древовидную структуру (см. [Иллюстрация] [дерево узлов html5rocks]).
 
-![using dev tools](readme-assets/aquapals-dev-tools.gif)  
-*Figure 1*.  Using Chrome's dev tools to explore the DOM.
+Мы можем изучить дерево DOM с помощью инструментов разработчика нашего браузера ([chrome dev tools] []). Если мы используем браузер Chrome, то найти DOM мы сможем на вкладке «Элементы». Древовидная структура DOM отображается как контур, который мы можем визуально исследовать, расширяя и сворачивая отдельные ветви. Когда наш курсор перемещается по узлу в контуре, то этот узел выделяется в режиме просмотра страницы. Это показано на Рисунке 1.
 
+! [с помощью инструментов dev] (readme-assets / aquapals-dev-tools.gif)
+*Рисунок 1*. Использование инструментов разработчика Chrome для изучения DOM.
 
-### Release 1:  Pulling Information from the DOM
-The DOM is an object-oriented representation of an HTML document.  And as we know, objects provide interfaces for interacting with them. The DOM objects are no exception.  In the browser we can interact with the DOM through JavaScript.  In this release, we're going to take a look at how we can pull information out of the DOM.
+###Выпуск 1: извлечение информации из DOM
 
-We'll be working in the browser's JavaScript console ([chrome console][]).  This is part of the dev tools.  In Chrome, it's available on the "Console" tab.  In the console, we can write and execute JavaScript.  It's similar to working in IRB; but it's JavaScript, and we have access to the DOM.
+DOM представляет собой объектно-ориентированное представление HTML-документа. И, как мы знаем, объекты предоставляют интерфейсы для взаимодействия с ними. Объекты DOM не являются исключением. В браузере мы можем взаимодействовать с DOM посредством JavaScript. В этом выпуске мы рассмотрим, как можно извлекать информацию из DOM.
 
-We gain access to the DOM through one object: `document`.  What can we do with this object?  It's the root of the DOM tree, and we can ask it for the element with a certain ID, the elements with a certain class, etc.  Open the console in the dev tools and pull some information out of the DOM; follow along with the code in Figure 2.
+Мы будем работать в консоли JavaScript браузера ([chrome console] []). Это часть инструментов dev. В Chrome он доступен на вкладке «Консоль». В этой консоли мы можем писать и выполнять JavaScript. Это похоже на работу в IRB, но только это JavaScript, и у нас есть доступ к DOM.
+
+Мы получаем доступ к DOM через один объект: `document`. Что мы можем сделать с этим объектом? Это корень дерева DOM, и мы можем задать ему элемент с определенным идентификатором, элементами с определенным классом и т. д. Откройте консоль в инструментах dev и вытащите некоторую информацию из DOM; действуйте согласно коду на Рисунке 2.
 
 ```js
-// Get the document object.
+// Get the document object. (Установите объект документа)
 document;
 
-// Get the title of the page.
+// Get the title of the page. (Установите заголовок страницы)
 document.title;
 
-// Get the element with the id "fish-list".
+// Get the element with the id "fish-list". (Установите элемент с ID "fish-list")
 document.getElementById("fish-list");
 
-// Get all the <span> elements.
+// Get all the <span> elements. (Установите все элементы <span>)
 document.getElementsByTagName("span");
 
-// Get all the elements with the class "fish-list-card".
+// Get all the elements with the class "fish-list-card". (Установите все элементы класса "fish-list-card".)
 document.getElementsByClassName("fish-list-card");
 
-// Get all the <h1> elements that descend from the element with the id "main".
-var main = document.getElementById("main");
+// Get all the <h1> elements that descend from the element with the id "main". (Установите все <h1> элементы, которые идут ниже эелемента с ID "main)
+let main = document.getElementById("main");
 main.getElementsByTagName("h1");
 
-// Get the children of the first element with the class "fish-list-card".
-var firstCard = document.getElementsByClassName("fish-list-card")[0];
+// Get the children of the first element with the class "fish-list-card". (Установите дочерний элемент первого элемента с классом "fish-list-card".)
+let firstCard = document.getElementsByClassName("fish-list-card")[0];
 firstCard.children;
 
-// Get the text inside the element with the id "wordmark".
-var wordmark = document.getElementById("wordmark");
+// Get the text inside the element with the id "wordmark". (Установите текст внутри элемента с ID “wordmark")
+let wordmark = document.getElementById("wordmark");
 wordmark.innerText;
 
-// Get the value of the id attribute of the first <span> tag.
-var firstSpan = document.getElementsByTagName("span")[0];
+// Get the value of the id attribute of the first <span> tag. (Установите цену атрибута ID первого <span> тега)
+let firstSpan = document.getElementsByTagName("span")[0];
 firstSpan.attributes["id"].value;
 ```
-*Figure 2*.  Pulling information out of the DOM.
+*Рисунок 2*.  Вытаскивание информации из DOM.
+
+Теперь пришло время извлечь некоторую информацию из DOM самостоятельно. В консоли откройте ответы на следующие вопросы из DOM.
+
+- Каков адрес, указанный на веб-странице?
+- Как называется последняя рыба в списке?
+- Какова ценность атрибута `src` для изображения черного бандита-ангела?
 
 
-Now it's time to pull some information from the DOM on our own.  In the console, pull the answers to the following questions from the DOM.
+### Выпуск 2: Обновление DOM
 
-- What is the address listed on the webpage?
-- What is the name of the last fish in the list?
-- What is the value of `src` attribute for the image of the black bandit angelfish?
-
-
-### Release 2:  Updating the DOM
-DOM objects also provide methods for making changes to the DOM.  For example, we can change the text that appears on the page, add classes to objects, etc.  We can even create new elements and add them to the DOM.  We'll continue to work in the console with our AquaPals page.  Follow along with the code in Figure 3; as we update the DOM, we'll see the changes reflected in the page view.
+Объекты DOM также предоставляют методы для внесения изменений в DOM. Например, мы можем изменять текст, который появляется на странице, добавлять классы к объектам и т. д. Мы можем даже создавать новые элементы и добавлять их в DOM. Мы продолжим работу в консоли с нашей страницей AquaPals. Действуйте согласно коду на Рисунке 3; по мере обновления DOM мы увидим изменения, отраженные в просмотре страницы.
 
 ```js
-// Change the text inside the element with the id "wordmark".
-var wordmark = document.getElementById("wordmark");
+// Change the text inside the element with the id "wordmark". (Измените текст внутри элемента с ID “wordmark")
+let wordmark = document.getElementById("wordmark");
 wordmark.innerText = "Aqua-Pets";
 
-// Add the class "light" to the element with the id "wordmark".
+// Add the class "light" to the element with the id "wordmark". (Добавьте класс "light" элементу с ID “wordmark")
 wordmark.className += " light";
 
-// Change the text inside the first <h1> tag in the element with the id "main".
-var main = document.getElementById("main");
-var mainHeading = main.getElementsByTagName("h1")[0];
+// Change the text inside the first <h1> tag in the element with the id "main". (Измените текст внутри первого <h1> тега в элементе с ID "main")
+let main = document.getElementById("main");
+let mainHeading = main.getElementsByTagName("h1")[0];
 mainHeading.innerText = "Fish for $ale";
 
-// Create a <footer> element and append it to the end of the <body>.
-var footerText = document.createElement("span");
+// Create a <footer> element and append it to the end of the <body>. (Создайте элемент <footer> и прикрепите его к концу <body>)
+let footerText = document.createElement("span");
 footerText.innerText = "AquaPals - 2016"
-var footer = document.createElement("footer");
+let footer = document.createElement("footer");
 footer.id = "footer";
 footer.className = "light flex-column";
 footer.appendChild(footerText);
-footer    // Take a look at the element we've built.
-var body = document.getElementById("body");
+footer    // Take a look at the element we've built. (Взгляните на элемент, который создали)
+let body = document.getElementById("body");
 body.appendChild(footer);    // The footer element appears at the page view bottom.
 
-// Update the styling of the <footer>.
+// Update the styling of the <footer>. (Обновите стиль <footer>)
 footer.style.paddingTop = "6em";
 footer.style.paddingBottom = "6em";
 ```
-*Figure 3*.  Updating the DOM through JavaScript.
+*Рисунок 3*.  Обновление DOM через JavaScript.
 
+Мы собираемся сделать некоторые обновления самостоятельно, но прежде чем сделать это, обновите страницу. Что случилось с нашими изменениями? Они исчезли! Почему? Помните, что когда страница загружается, браузер анализирует документ в DOM. DOM - это объект, который представляет HTML, но это не HTML. Когда мы редактируем DOM, мы меняем объекты только в дереве DOM. Мы не редактируем HTML-файл, из которого был создан DOM. Когда мы обновляем страницу, браузер повторно разбирает файл и создает новое дерево DOM.
 
-We're going to make some updates on our own, but before we do, refresh the page.  What happened to our changes?  They're gone!  Why?  Remember, when the page loads, the browser parses the document into the DOM.  The DOM is an object that represents the HTML, but it is not the HTML.  When we edit the DOM, we're only changing the objects in the DOM tree.  We're not editing the HTML file from which the DOM was built.  When we refresh the page, the browser re-parses the file and builds a new DOM tree.
+Теперь пришло время обновить DOM самостоятельно. В консоли выполните следующие изменения.
 
-Now it's time to update the DOM on our own.  In the console, make the following changes.
-
-- Change the name of the "Akindynos Clownfish" to be "Clownfish".
-- Add another fish to the list using only Javascript (no editing the HTML file).  The image file is provided, and the elements to add would look like this in HTML.
+- Измените название «Akindynos Clownfish» как «Clownfish».
+- Добавьте другую рыбу в список, используя только Javascript (без редактирования файла HTML). Файл изображения предоставляется, а добавляемые элементы будут выглядеть так в HTML.
 
   ```
   <li id="fish-9" class="fish-list-card flex-column light">
@@ -124,27 +123,30 @@ Now it's time to update the DOM on our own.  In the console, make the following 
   </li>
   ```
 
+### Выпуск 3: Прослушивание событий
 
-### Release 3:  Listening for Events
-When users interact with a webpage, they click on elements, submit forms, etc.  These are events for which DOM objects can listen.  For example, we can take a DOM object and instruct it to listen for the user to click on it. When we do so, we provide a callback function to execute if the click takes place—if a click event occurs, run this function.  Continuing to work in the console with our AquaPals page, lets add an event listener.  Follow along with the code in Figure 4.
+Когда пользователи взаимодействуют с веб-страницей, они нажимают на элементы, подтверждают различные формы и т. д. Этими элементами являются события, для которых объекты DOM могут прослушиваться. Например, мы можем взять объект DOM и поручить ему прослушать информацию для пользователя, активируя этот объект щелчком. Когда мы это делаем, мы предоставляем функцию обратного вызова для ее выполнения в том случае, если происходит клик. Продолжая работать в консоли с нашей страницей AquaPals, добавьте прослушиватель событий. Действуйте согласно коду на Рисунке 4.
+
 
 ```js
-// Define a function that will open an alert box.
+// Define a function that will open an alert box. (Определите функцию, которая будет открываться в качестве предупреждения)
 function alertWordmarkClick() { alert("You clicked the wordmark."); }
 
-// Listen for click events on the element with the id "wordmark".
-var wordmark = document.getElementById("wordmark");
+// Listen for click events on the element with the id "wordmark". (Слушайте клики на события с элементами, имеющими ID "wordmark")
+let wordmark = document.getElementById("wordmark");
 wordmark.addEventListener("click", alertWordmarkClick);
 ```
-*Figure 4*.  Adding event listeners to DOM objects.
+*Рисунок 4*.  Добавление прослушивания событий к объектам DOM.
 
-We've now set up an event listener so that if we click on the "AqualPals" wordmark, an alert box will open.  Maybe the user will click the wordmark, maybe not.  But, if it does happen, the alert box will open.  All right, let's go ahead and click on the wordmark to see the alert box open.
-
-
-## Conclusion
-In this challenge we've explored the document object model and how to interact with it.  When the browser makes an HTTP request and the server responds with HTML, the browser parses the HTML into the DOM.  The DOM is an object-oriented representation of the HTML.  The objects that comprise the DOM provide interfaces which we can use to interact with them.  In the browser, we interact with the DOM using JavaScript.  This allows us to pull information from the DOM, update the DOM, and listen for and respond to events.
+Мы настроили устройство для прослушивания событий таким образом, чтобы по щелчку на слово «AqualPals» открывалось окно предупреждения. Возможно, пользователь нажмет на словосочетание, а возможно и нет. Но если это произойдет, то обязательно откроется окно предупреждения.
+Отлично, теперь давайте продолжим и нажмем на словосочетание для того, чтобы открыть окно предупреждения!
 
 
-[chrome console]: https://developer.chrome.com/devtools#console
+## Выводы
+
+В этой задаче мы исследовали объектную модель документа и способы взаимодействия с ней. Когда браузер делает HTTP-запрос, и сервер отвечает посредством HTML, то браузер анализирует HTML при помощи DOM. DOM является объектно-ориентированным представлением HTML. Объекты, которые содержат DOM, предоставляют интерфейсы, которые мы можем использовать для взаимодействия с ними. В браузере мы взаимодействуем с DOM вместе с использованием JavaScript. Это позволяет нам извлекать информацию из DOM, обновлять DOM, а также слушать и реагировать на события.
+
+
+[chrome консоль]: https://developer.chrome.com/devtools#console
 [chrome dev tools]: https://developer.chrome.com/devtools
-[html5rocks node tree]: http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#DOM
+[html5rocks tree tree]: http://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#DOM
